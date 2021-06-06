@@ -29,3 +29,5 @@ def generate_token():
     sync_grant = SyncGrant(sync_service_sid)
     token.add_grant(sync_grant)
     return jsonify(identity=username, token=token.to_jwt().decode())
+
+#dead
