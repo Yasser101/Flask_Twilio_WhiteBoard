@@ -1,4 +1,4 @@
-Twilio.env
+.env
 requirements.txt
 .idea/
 venv/
