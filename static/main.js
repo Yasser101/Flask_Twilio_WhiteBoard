@@ -35,8 +35,8 @@ $(function () {
 
   function onMouseDown(e) {
     drawing = true;
-    current.x = e.clientX;
-    current.y = e.clientY;
+    current.x = e.clientX || e.touches[0].clientX;
+    current.y = e.clientY || e.touches[0].clientY;
   }
 
   function onMouseUp(e) {
@@ -44,16 +44,22 @@ $(function () {
       return;
     }
     drawing = false;
-    drawLine(current.x, current.y, e.clientX, e.clientY, current.color), syncStream;
+    drawLine(
+          current.x, current.y,
+          e.clientX || e.touches[0].clientX, e.clientY || e.touches[0].clientY,
+          current.color, syncStream);
   }
 
   function onMouseMove(e) {
     if (!drawing) {
       return;
     }
-    drawLine(current.x, current.y, e.clientX, e.clientY, current.color, syncStream);
-    current.x = e.clientX;
-    current.y = e.clientY;
+    drawLine(
+          current.x, current.y,
+          e.clientX || e.touches[0].clientX, e.clientY || e.touches[0].clientY,
+          current.color, syncStream);
+        current.x = e.clientX || e.touches[0].clientX;
+        current.y = e.clientY || e.touches[0].clientY;
   }
 
   function onResize() {
@@ -77,6 +83,11 @@ $(function () {
   canvas.addEventListener("mouseup", onMouseUp);
   canvas.addEventListener("mouseout", onMouseUp);
   canvas.addEventListener("mousemove", throttle(onMouseMove, 10));
+
+  canvas.addEventListener('touchstart', onMouseDown);
+  canvas.addEventListener('touchend', onMouseUp);
+  canvas.addEventListener('touchcancel', onMouseUp);
+  canvas.addEventListener('touchmove', throttle(onMouseMove, 10));
 
   var colorBtn = $("#color-btn");
   var clearBtn = $("#clear-btn");
