@@ -39,5 +39,4 @@ def test_message(message):
     emit('messagePublished',message,broadcast=True, include_self=False)
 
 
-
 app.run(host='0.0.0.0', port=8088)
