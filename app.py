@@ -1,12 +1,13 @@
 import os
-
-from flask import Flask, request, jsonify, render_template
+from flask_socketio import SocketIO, emit, disconnect
+from flask import Flask, request, jsonify, render_template,session
 from faker import Faker
 from twilio.jwt.access_token import AccessToken
 from twilio.jwt.access_token.grants import SyncGrant
-
+async_mode = None
 app = Flask(__name__)
 fake = Faker()
+socket_ = SocketIO(app, async_mode=async_mode)
 
 
 @app.route('/')
@@ -29,3 +30,13 @@ def generate_token():
     sync_grant = SyncGrant(sync_service_sid)
     token.add_grant(sync_grant)
     return jsonify(identity=username, token=token.to_jwt().decode())
+
+
+@socket_.on('drawingData')
+def test_message(message):
+    print(message)
+  #  session['receive_count'] = session.get('receive_count', 0) + 1
+    emit('messagePublished',message,broadcast=True, include_self=False)
+
+
+app.run(host='0.0.0.0', port=8088)
